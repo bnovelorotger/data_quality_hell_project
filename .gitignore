@@ -4,9 +4,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Data (Excluding reference)
+# Data (Excluding reference and benchmark dataset)
 data/raw/
-data/interim/
+data/interim/*
+!data/interim/all_jobs_merged.csv
 discarded data/
 !data/reference/
 

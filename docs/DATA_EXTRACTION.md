@@ -37,26 +37,26 @@ graph TD
 
 ## 3. Step-by-Step Execution
 
-### Step A: Bulk Ingestion
-Run the bulk ingestion script to fetch raw JSON data for all countries. This script orchestrates multiple calls to the Adzuna API.
+### Step A: Bulk Ingestion (Model Case)
+To replicate the **Model Case (Jan 1-15)**, we use a higher depth and an age filter.
 
 ```bash
-# Fetch 10 pages per country (50 results per page)
-python src/ingestion/run_bulk_ingestion.py --pages 10 --results-per-page 50
+# Fetch 30 pages per country to reach Jan 1st
+python src/ingestion/run_bulk_ingestion.py --pages 30 --results-per-page 50 --max-days-old 25
 ```
 - **Output**: Multi-page JSON files saved in `data/raw/snapshot_id/`.
-- **Note**: The script handles rate limiting and retries automatically.
+- **Note**: Reaching early January depends on the job volume per country; 30 pages covers 1,500 records.
 
-### Step B: Flattening & Cleanup
-Process the raw JSON snapshots into structured CSV files while cleaning up old data.
+### Step B: Flattening & Cleanup (Strict Filtering)
+Process the raw JSON snapshots and filter for the specific project period.
 
 ```bash
-python src/processing/flatten_raw.py
+python src/processing/flatten_raw.py --start-date 2026-01-01 --end-date 2026-01-15
 ```
 - **Actions**:
   1. Identifies all snapshots in `data/raw/`.
   2. Keeps only the **latest** version for each country and deletes the rest.
-  3. Extracts fields: `description`, `title`, `id`, `company`, `adref`, `location`, `created`.
+  3. Extracts fields and filters by `created` date.
 - **Output**: Individual CSVs in `data/interim/{country}_jobs.csv`.
 
 ### Step C: Data Merging
@@ -74,9 +74,9 @@ python src/processing/merge_data.py
 
 To maintain a clean and professional repository, we follow these rules:
 
-- **Included in Git**: All source code (`src/`), documentation (`docs/`), and reference metadata (`data/reference/`).
-- **Excluded from Git**: Raw JSON data (`data/raw/`) and interim CSVs (`data/interim/`).
-- **Rationale**: This demonstrates "Data Engineering rigor"—anyone who clones the repo can perfectly replicate the datasets by running the documented pipeline, rather than downloading stale binary files.
+- **Included in Git**: All source code (`src/`), documentation (`docs/`), reference metadata (`data/reference/`), and the **benchmark model dataset** (`data/interim/all_jobs_merged.csv`).
+- **Excluded from Git**: Raw JSON data (`data/raw/`) and temporary interim CSVs.
+- **Rationale**: While the pipeline is fully replicable, keeping the Jan 1-15 dataset ensures that any contributor can immediately start with the exact same data baseline used in the notebooks.
 
 ---
 

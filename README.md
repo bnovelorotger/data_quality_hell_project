@@ -33,6 +33,11 @@ This project uses job market data scraped from **Adzuna** (or other sources). Yo
 
 But... it’s messy. There are **inconsistent salaries**, **broken job descriptions**, **missing company names**, and a lot more. Time to roll up our sleeves and fix it.
 
+### 🧱 **The "Model Case" (Jan 1-15, 2026)**
+To ensure reproducibility, this project focuses on a specific **benchmark dataset** extracted between **January 1st and January 15th, 2026**. 
+
+While the ingestion scripts are available for fresh runs, we encourage using the provided `data/interim/all_jobs_merged.csv` to replicate the exact cleaning steps and findings described in the notebooks. This avoids the "moving target" problem of live job market APIs.
+
 ## 🔧 **Steps to Cleanliness**
 
 Here’s how we tackle the mess:

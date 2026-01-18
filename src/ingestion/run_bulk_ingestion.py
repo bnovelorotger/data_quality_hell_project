@@ -17,6 +17,7 @@ def main():
     parser.add_argument("--pages", type=int, default=1, help="Pages per country. Default: 1")
     parser.add_argument("--results-per-page", type=int, default=50, help="Results per page. Default: 50")
     parser.add_argument("--what", default="data", help="Search keywords. Default: data")
+    parser.add_argument("--max-days-old", type=int, default=None, help="Include jobs up to X days old")
     parser.add_argument("--limit", type=int, default=None, help="Limit number of countries to process (for testing)")
     
     args = parser.parse_args()
@@ -51,6 +52,9 @@ def main():
             "--pages", str(args.pages),
             "--results-per-page", str(args.results_per_page)
         ]
+        
+        if args.max_days_old:
+            cmd.extend(["--max-days-old", str(args.max_days_old)])
         
         try:
             # We use check=True to stop if one fails, but maybe we want to continue?

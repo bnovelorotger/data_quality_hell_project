@@ -117,6 +117,7 @@ def main() -> int:
     parser.add_argument("--pages", type=int, default=10, help="Number of pages to fetch (starting at 1). Default: 5")
     parser.add_argument("--results-per-page", type=int, default=50, help="Results per page (max 50). Default: 50")
     parser.add_argument("--sort-by", default="date", choices=["date", "relevance", "salary"], help="Sort. Default: date")
+    parser.add_argument("--max-days-old", type=int, default=None, help="Include jobs up to X days old")
     parser.add_argument("--sleep-seconds", type=float, default=3.0, help="Throttle between requests. Default: 3.0")
     args = parser.parse_args()
 
@@ -144,6 +145,8 @@ def main() -> int:
         "content-type": "application/json",
         "sort_by": args.sort_by,
     }
+    if args.max_days_old:
+        params["max_days_old"] = args.max_days_old
     if args.where_:
         params["where"] = args.where_
 
