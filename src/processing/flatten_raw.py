@@ -19,22 +19,26 @@ from collections import defaultdict
 import pandas as pd
 
 def cleanup_snapshots(raw_dir: Path):
-    """Keeps only the latest snapshot for each country."""
+    """Keeps only the latest snapshot for each country and specific search term."""
     print("🧹 Cleaning up old snapshots...")
     snapshots = [d for d in raw_dir.iterdir() if d.is_dir() and d.name.startswith("adzuna__")]
     
-    # Group by country: adzuna__gb__... -> country = gb
+    # Group by (country, what): adzuna__gb__what_data_engineer__... -> ('gb', 'data_engineer')
     grouped = defaultdict(list)
     for s in snapshots:
         parts = s.name.split("__")
-        if len(parts) >= 2:
+        if len(parts) >= 3:
             country = parts[1]
-            # timestamp is at the end: 20260114T170001Z
+            # Adzuna snapshots are: adzuna__{country}__what_{role_slug}__T{timestamp}Z
+            # Parts: [adzuna, country, what_role_slug, timestamp]
+            search_part = parts[2] # e.g. "what_data_engineer"
             timestamp = parts[-1]
-            grouped[country].append((timestamp, s))
+            
+            key = (country, search_part)
+            grouped[key].append((timestamp, s))
     
     deleted_count = 0
-    for country, items in grouped.items():
+    for key, items in grouped.items():
         # Sort by timestamp (alphabetical sort works for YYYYMMDDTHHMMSSZ)
         items.sort(key=lambda x: x[0], reverse=True)
         latest = items[0][1]
@@ -46,7 +50,8 @@ def cleanup_snapshots(raw_dir: Path):
             deleted_count += 1
             
     print(f"✨ Cleanup finished. Deleted {deleted_count} old snapshots.")
-    return {country: items[0][1] for country, items in grouped.items()}
+    # Returns mapping: (country, search_part) -> path
+    return {key: items[0][1] for key, items in grouped.items()}
 
 def flatten_data(latest_snapshots: dict, interim_dir: Path, start_date: str = None, end_date: str = None):
     """Extracts job data and saves to CSV with optional date filtering."""
@@ -56,10 +61,13 @@ def flatten_data(latest_snapshots: dict, interim_dir: Path, start_date: str = No
     s_date = pd.to_datetime(start_date).tz_localize('UTC') if start_date else None
     e_date = (pd.to_datetime(end_date) + pd.Timedelta(hours=23, minutes=59, seconds=59)).tz_localize('UTC') if end_date else None
 
-    for country, snapshot_path in latest_snapshots.items():
-        print(f"📄 Processing {country.upper()} from {snapshot_path.name}...")
+    for (country, search_part), snapshot_path in latest_snapshots.items():
+        search_term = search_part.replace("what_", "").replace("_", " ").title()
+        print(f"📄 Processing {country.upper()} ({search_term}) from {snapshot_path.name}...")
         
-        output_file = interim_dir / f"{country}_jobs.csv"
+        # New naming convention to avoid overwrites: gb_data_engineer_jobs.csv
+        role_slug = search_part.replace("what_", "")
+        output_file = interim_dir / f"{country}_{role_slug}_jobs.csv"
         
         # Collect all job results from all JSON pages
         all_jobs = []
@@ -80,7 +88,7 @@ def flatten_data(latest_snapshots: dict, interim_dir: Path, start_date: str = No
             continue
 
         # Write to CSV
-        fieldnames = ["description", "title", "id", "company", "adref", "location", "created"]
+        fieldnames = ["description", "title", "id", "company", "adref", "location", "created", "search_term"]
         
         rows_saved = 0
         try:
@@ -104,8 +112,7 @@ def flatten_data(latest_snapshots: dict, interim_dir: Path, start_date: str = No
                             if e_date and job_date > e_date:
                                 continue
                         except:
-                            pass # If date is malformed, we keep it or skip? For DQ hell, let's keep it unless filtering is strict.
-                            # But if we want a clean model case, skipping malformed dates is better.
+                            pass
                     
                     row = {
                         "description": job.get("description", ""),
@@ -114,7 +121,8 @@ def flatten_data(latest_snapshots: dict, interim_dir: Path, start_date: str = No
                         "company": job.get("company", {}).get("display_name", "") if isinstance(job.get("company"), dict) else "",
                         "adref": job.get("adref", ""),
                         "location": job.get("location", {}).get("display_name", "") if isinstance(job.get("location"), dict) else "",
-                        "created": created_str
+                        "created": created_str,
+                        "search_term": search_term
                     }
                     writer.writerow(row)
                     rows_saved += 1
