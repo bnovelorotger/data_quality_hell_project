@@ -11,16 +11,13 @@ ADZUNA_APP_ID=your_id_here
 ADZUNA_APP_KEY=your_key_here
 ```
 
-### Reference Data
-The list of targeted countries is stored in `data/reference/countries.json`. Currently, it includes 19 supported countries. (RU = RUSSIA is not supported anymore)
-
 ---
 
 ## 2. Process Flow
 
 ```mermaid
 graph TD
-    A[API Credentials .env] --> B(run_bulk_ingestion.py)
+    A[API Credentials .env] --> B(run_tech_ingestion.py)
     C[Country List countries.json] --> B
     B --> D{data/raw/}
     D --> E(flatten_raw.py)
@@ -37,52 +34,53 @@ graph TD
 
 ## 3. Step-by-Step Execution
 
-### Step A: Bulk Ingestion (Model Case)
-To replicate the **Model Case (Jan 1-15)**, we use a higher depth and an age filter.
+### Step A: Specialized Tech Ingestion (The Model Case)
+To replicate the **Model Case (Jan 1-15, 2026)**, we use a specialized orchestrator that targets the most relevant data roles across 19 countries. This script ensures a high-density dataset for analysis.
 
 ```bash
-# Fetch 30 pages per country to reach Jan 1st
-python src/ingestion/run_bulk_ingestion.py --pages 30 --results-per-page 50 --max-days-old 25
+# Iterates over: Data Engineer, Scientist, Analyst, MLOps, Architect
+python src/ingestion/run_tech_ingestion.py
 ```
-- **Output**: Multi-page JSON files saved in `data/raw/snapshot_id/`.
-- **Note**: Reaching early January depends on the job volume per country; 30 pages covers 1,500 records.
+- **Configuration**: Uses a depth of 50 pages per role/country to reach the Jan 1st - 15th window.
+- **Output**: Multi-page JSON files saved in `data/raw/adzuna__{country}__what_{role}__/`.
+- **Note**: This process creates the foundation for our **Multi-Role Paradox** analysis.
 
 ### Step B: Flattening & Cleanup (Strict Filtering)
-Process the raw JSON snapshots and filter for the specific project period.
+Process the raw JSON snapshots and filter for the specific project period (January 1st to 15th).
 
 ```bash
 python src/processing/flatten_raw.py --start-date 2026-01-01 --end-date 2026-01-15
 ```
 - **Actions**:
   1. Identifies all snapshots in `data/raw/`.
-  2. Keeps only the **latest** version for each country and deletes the rest.
-  3. Extracts fields and filters by `created` date.
-- **Output**: Individual CSVs in `data/interim/{country}_jobs.csv`.
+  2. Keeps only the **latest** version for each country/role and deletes stale ones.
+  3. Extracts core fields and applies strict date filtering.
+- **Output**: Individual role/country CSVs in `data/interim/{country}_{role}_jobs.csv`.
 
 ### Step C: Data Merging
-Consolidate all individual country CSVs into a single master dataset for analysis.
+Consolidate all individual segments into a single master dataset.
 
 ```bash
 python src/processing/merge_data.py
 ```
-- **Action**: Merges all `*_jobs.csv` files and adds a `country_code` column.
-- **Output**: `data/interim/all_jobs_merged.csv` (approx. 9,500 rows).
+- **Action**: Merges all interim CSVs and adds/normalizes the `country_code` column.
+- **Output**: `data/interim/all_jobs_merged.csv` (approx. 39,844 raw rows before semantic deduplication).
 
 ---
 
 ## 4. Git & Data Strategy
 
-To maintain a clean and professional repository, we follow these rules:
+To maintain a professional showcase, we follow a split-data strategy:
 
-- **Included in Git**: All source code (`src/`), documentation (`docs/`), reference metadata (`data/reference/`), and the **benchmark model dataset** (`data/interim/all_jobs_merged.csv`).
-- **Excluded from Git**: Raw JSON data (`data/raw/`) and temporary interim CSVs.
-- **Rationale**: While the pipeline is fully replicable, keeping the Jan 1-15 dataset ensures that any contributor can immediately start with the exact same data baseline used in the notebooks.
+- **Included in Git**: Source code, documentation, and the **Benchmark Master Dataset** (`data/interim/all_jobs_merged.csv`).
+- **Excluded from Git**: Raw JSON snapshots (too heavy/private) and intermediate CSVs.
+- **Rationale**: We include the master CSV so that anyone cloning the repo has the "Gold Standard" data used in the Jupyter Notebooks immediately available.
 
 ---
 
 ## 5. Replication Checklist
 - [ ] Verify `.env` variables.
-- [ ] Run `run_bulk_ingestion.py`.
-- [ ] Run `flatten_raw.py`.
+- [ ] Run `run_tech_ingestion.py` (Wait for API throttling).
+- [ ] Run `flatten_raw.py` with 2026 date filters.
 - [ ] Run `merge_data.py`.
 - [ ] Final result available in `data/interim/all_jobs_merged.csv`.
