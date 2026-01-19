@@ -90,4 +90,4 @@ This project is built based on honest technical pains encountered in production:
 I don't just "clean" data. I build the systems that make data **trustworthy**. If you are looking for a Data professional who prioritizes structural integrity over vanity metrics, let's talk.
 
 ---
-*Created by [Bernat Novel](https://github.com/bnovelorotger)*
+*Created by [BNovelo](https://github.com/bnovelorotger)*
