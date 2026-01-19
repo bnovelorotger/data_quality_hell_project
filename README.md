@@ -1,89 +1,77 @@
+# **Data Quality Hell: The Art of Taming Global Job Market Chaos**
 
-# **Data Quality Hell: Transforming Messy Job Market Data**
+[![Portfolio](https://img.shields.io/badge/Status-EDA%20Complete-success?style=for-the-badge&logo=github)](https://github.com/bnovelorotger/data_quality_hell_project)
+[![Python](https://img.shields.io/badge/Python-3.9+-blue?style=for-the-badge&logo=python)](https://www.python.org/)
+[![Pandas](https://img.shields.io/badge/Data-Pandas-150458?style=for-the-badge&logo=pandas)](https://pandas.pydata.org/)
 
-## 🚧 **Welcome to Data Quality Hell**
+## 🚀 **The Mission: Turning Raw Noise into Strategic Gold**
 
-You’ve heard the hype about data science and machine learning. But here’s the truth: **the real battle starts with the data**. And **Data Quality Hell** is here to show you why cleaning messy data is the foundation of everything that follows.
+They say data is the new oil, but most of it is **sludge**. 
 
-This project is all about taking a *chaotic*, *scraped* job market dataset full of errors and transforming it into something you can actually use. It’s a **real-world problem**, and we’re not afraid to get our hands dirty.
+**Data Quality Hell** is a professional showcase of data engineering and exploratory analysis. This project takes a chaotic, high-volume stream of raw job market data (scraped via Adzuna API) and transforms it into a structured, highly valuable asset. 
 
-**Data Quality Hell** shows you how messy data can be cleaned, refined, and made valuable. Forget about the fancy models—this is where the magic begins. Let’s turn that **junk** into **gold**.
+It’s not just about "cleaning" data; it's about **re-engineering its value**.
 
-## 🎯 **The Goal: Clean Data = Clear Insights**
+---
 
-This is **not** a project about fancy analysis or models. It’s about **getting the data right**. We’re solving real data quality issues like:
+## 🏗 **The "Model Case" Benchmark (Jan 1-15, 2026)**
 
-- **Missing values**
-- **Inconsistent formats**
-- **Duplicates**
-- **Outliers**
-- **Broken fields**
+To demonstrate professional rigor, we focus on a reproducible, large-scale snapshot:
+- **📊 Volume:** 39,844 raw records processed.
+- **🌍 Scope:** 19 countries (US, GB, IN, CA, AU, etc.).
+- **🧩 Complexity:** Real-world API inconsistencies, malformed dates, and missing attribution.
 
-By the end of this, the data will be clean, structured, and ready to go. No more guessing. No more hacks. Just solid, reliable data.
+---
 
-## 🧑‍💻 **The Dataset**
+## 🛠 **High-Impact Challenges & Solutions**
 
-This project uses job market data scraped from **Adzuna** (or other sources). You’ll find all sorts of information like:
+### 1. **The Multi-Role Paradox**
+> **Problem:** How do you handle a job that targets both "Data Scientist" and "Machine Learning"? Most systems simply drop the "duplicate".
+> 
+> **Solution:** I implemented a **Multi-Role Mapping** strategy. Instead of losing data, we flattened and grouped segments, allowing for a deep analysis of "Hybrid Roles"—the most in-demand type of posting in the current market.
 
-- **Job Titles**
-- **Companies**
-- **Salaries**
-- **Locations**
-- **Job Descriptions**
+### 2. **Global Standardization**
+> **Problem:** 19 different countries, various date formats, and fragmented location strings.
+> 
+> **Solution:** A robust preprocessing pipeline that converts raw JSON into standardized Pandas dataframes, ensuring 100% technical consistency across international borders.
 
-But... it’s messy. There are **inconsistent salaries**, **broken job descriptions**, **missing company names**, and a lot more. Time to roll up our sleeves and fix it.
+### 3. **The "Unknown" Factor**
+> **Problem:** 3.3% missing company data.
+> 
+> **Solution:** Implemented strategic placeholder handling and segment-based analysis to ensure missing data doesn't skew geographical or temporal trends.
 
-### 🧱 **The "Model Case" (Jan 1-15, 2026)**
-To ensure reproducibility, this project focuses on a specific **benchmark dataset** extracted between **January 1st and January 15th, 2026**. 
+---
 
-While the ingestion scripts are available for fresh runs, we encourage using the provided `data/interim/all_jobs_merged.csv` to replicate the exact cleaning steps and findings described in the notebooks. This avoids the "moving target" problem of live job market APIs.
+## 📈 **Project Roadmap: From Chaos to Insights**
 
-## 🔧 **Steps to Cleanliness**
+1.  **[PROCESSED] Data Ingestion:** Automated bulk retrieval of raw JSON snapshots.
+2.  **[DONE] Preliminary EDA:** Initial triage, technical cleanup, and "Multi-Role" strategy definition.
+3.  **[DONE] Deep EDA:** Insight extraction, role classification by title keywords, and temporal trend mapping.
+4.  **[UPCOMING] Transformation Pipeline:** Automating the transition to a clean Database/Warehouse structure.
 
-Here’s how we tackle the mess:
+---
 
-1. **Scrape the Data**: Collect raw, unclean job market data.
-2. **First Look**: Spot the problems—missing values, weird formats, duplicates, you name it.
-3. **Clean It Up**: Apply cleaning techniques—fill in missing values, fix formatting, remove duplicates.
-4. **Transform It**: Structure the data so it’s ready for analysis. No more chaos.
-5. **Handle Outliers**: Get rid of those wild values that make no sense.
+## 🧑‍🔬 **Tech Stack**
 
-## 🏁 **What’s Next?**
+- **Core:** Python 3.9+
+- **Data Heavy Lifting:** Pandas & NumPy
+- **Visual Storytelling:** Seaborn & Matplotlib
+- **Reproduction:** Jupyter Notebooks & Modular Python Scripts
 
-Once the data’s clean, **analysis** comes next. We could dive into trends, salary predictions, job market insights—you name it. But for now, we’re focused on the **real work**: cleaning the data so everything that follows is built on a solid foundation.
+---
 
-## 💡 **Why This Matters**
+## 📍 **Why This Matters for Your Business**
 
-Let’s face it: Most people skip over the data cleaning phase. But here’s the catch: **no matter how good your analysis or model is, if your data is bad, you’re doomed**.
+Most analytics projects fail because the foundation is weak. **Data Quality Hell** demonstrates a **foundation-first** mindset:
+- **Clean data = Clear decisions.**
+- **Robust pipelines = Scalable insights.**
+- **Structured thinking = Strategic advantage.**
 
-In this project, we demonstrate why **data cleaning is the unsung hero** of data science. Clean data leads to reliable results, confident decisions, and successful models.
+---
 
-## 🛠 **Tools We Use**
+## 🤝 **Let's Connect**
 
-- **Pandas**: For heavy lifting in data manipulation.
-- **NumPy**: To handle the numbers without breaking a sweat.
-- **Matplotlib/Seaborn**: For quick and dirty visualizations.
-- **BeautifulSoup & requests**: To scrape the data (yes, we start from scratch!).
-- **Jupyter Notebooks**: For interactive, real-time exploration.
+Are you looking for a Data professional who understands that the real battle is won in the data foundation? Check out my work and let's turn your "Data Hell" into "Data Gold".
 
-## 🏃‍♂️ **Get Started**
-
-1. **Clone the repo**:
-   ```bash
-   git clone https://github.com/bnovelorotger/data_quality_hell_project.git
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Dive into the Jupyter Notebook** and start cleaning the mess!
-
-## 🚀 **Contribute**
-
-Got ideas? Bugs to fix? Or just want to make it better? Fork the repo, send a pull request, and let’s improve this together. Make sure to stick to the structure and keep the focus on **data quality**!
-
-## 📝 **License**
-
-MIT License – see [LICENSE](LICENSE) for details.
+---
+*Created with ❤️ by [Bernat Novel](https://github.com/bnovelorotger)*
