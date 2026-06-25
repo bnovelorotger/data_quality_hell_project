@@ -1,93 +1,112 @@
-# **Data Quality Hell: The Art of Taming Global Job Market Chaos**
+# Data Quality Hell
 
-[![Portfolio](https://img.shields.io/badge/Status-EDA%20Complete-success?style=for-the-badge&logo=github)](https://github.com/bnovelorotger/data_quality_hell_project)
-[![Python](https://img.shields.io/badge/Python-3.9+-blue?style=for-the-badge&logo=python)](https://www.python.org/)
-[![Pandas](https://img.shields.io/badge/Data-Pandas-150458?style=for-the-badge&logo=pandas)](https://pandas.pydata.org/)
+End-to-end data quality and analytics engineering project built on 39,844 raw job ads collected across 19 countries.
 
-## � **Why This Project Exists?**
+This repository shows how I approach a common real-world problem: the data looks large and useful on the surface, but it is noisy, duplicated, semantically inconsistent, and risky to analyze without structural cleanup first.
 
-In the modern Data/AI landscape, **most projects fail not because of weak models, but because of weak foundations.** Decisions made on ambiguous, redundant, or malformed data are not just wrong—they are expensive. 
+## Why this project matters
 
-**Data Quality Hell** exists to prove that specialized data engineering—triage, normalization, and semantic deduplication—is the real unsung hero of the AI revolution. True value is built on **Trust**, not just algorithms.
+Most analytics projects do not fail because of dashboards or models. They fail because the underlying data is ambiguous, duplicated, or poorly normalized.
 
----
+In this project, the goal is not just to extract job ads from the Adzuna API. The goal is to turn a noisy multi-country dataset into something reliable enough for analysis, reporting, and future AI use cases.
 
-## 🚀 **The Mission: Turning Sludge into Strategic Gold**
+## Scope
 
-This project handles a chaotic stream of **39,844 raw records** across **19 countries**. It's a professional demonstration of how to navigate the common "pains" of real-world data:
-- **API Drift:** Inconsistent schemas across different country endpoints.
-- **Semantic Ambiguity:** Is a "Data Scientist" also an "ML Engineer"?
-- **Noise Concentration:** Managing 11k+ redundant records without losing the underlying classifications.
+- 39,844 raw rows in the benchmark merged dataset
+- 19 countries
+- 6 role-oriented search terms:
+  - `Data`
+  - `Data Analyst`
+  - `Data Architect`
+  - `Data Engineer`
+  - `Data Scientist`
+  - `Mlops`
 
-### **Market Insights at a Glance**
-| Role Distribution | Market Pulse |
-| :---: | :---: |
-| ![Roles](assets/role_distribution.png) | ![Pulse](assets/market_pulse.png) |
+## Core problems addressed
 
----
+### 1. Schema and source inconsistency
+Different country endpoints and API responses do not always behave consistently. The ingestion and flattening steps normalize those differences into a reproducible structure.
 
-## 🛠 **Core Challenges & High-Impact Solutions**
+### 2. Semantic overlap
+The same job ad can appear under multiple search terms. A naive deduplication strategy would remove rows and lose important context about how the market describes a role.
 
-### **The Multi-Role Paradox (Solving Semantic Overlap)**
-> **The Problem:** A single job ad often matches multiple keyword searches (e.g., 'Big Data' and 'Engineer'). Traditional deduplication simply deletes the "duplicates," losing 40% of the role context.
->
-> **The Solution:** I developed a **Multi-Role Aggregator**. Instead of dropping entries, we assigned multiple role tags to unique Job IDs. This preserves the richness of the market demand and prevents skewed metrics.
+### 3. Analysis on unstable foundations
+Before notebooks, charts, or salary modeling, the dataset needs cleanup, validation, traceability, and consistent transformations.
 
-## 🧪 **The Analyst's & Scientist's Edge**
-
-While the core of this project is engineering-heavy, the **ultimate goal is analytical excellence**. As a Data professional, I believe that building a model on shaky data is a liability. 
-
-By solving the "Data Quality Hell", I enable:
-- **Statistical Integrity:** Categorical distributions are not skewed by naive deduplication.
-- **Feature Readiness:** Standardized fields (dates, titles, companies) are ready for immediate NLP and Trend Analysis.
-- **Actionable Truth:** Transforming 40k noisy points into a clear narrative of the global job market.
-
----
-
-## 🏗 **The Production-Grade Architecture**
-
-We move beyond "one-off scripts" toward a reproducible, observable pipeline.
+## Pipeline
 
 ```mermaid
 graph TD
-    A[Adzuna API] -->|Raw Snapshots| B[(Immutable JSON)]
-    B -->|Flatten & Normalize| C{Interim CSV}
-    C -->|DQ Checks| D[Preliminary EDA]
-    D -->|Multi-Role Mapping| E[Deep Analysis]
-    E -->|Killer Insights| F[Strategic Reports]
-    
-    subgraph "Production Readiness"
-    B -.->|Reproducibility| B
-    C -.->|Trazability| C
-    D -.->|Confidence Building| D
-    end
+    A[Adzuna API] --> B[Raw JSON snapshots]
+    B --> C[Flatten and normalize]
+    C --> D[Interim CSV files]
+    D --> E[Merged benchmark dataset]
+    E --> F[EDA and downstream analysis]
+    E --> G[Salary enrichment experiments]
 ```
 
----
+## Repository structure
 
-## 📈 **Roadmap to Production Reliability**
+```text
+assets/                    Visual outputs used in the README
+data/interim/              Benchmark merged dataset used by notebooks
+data/reference/            Reference metadata such as country mappings
+docs/DATA_EXTRACTION.md    Replication guide for ingestion and processing
+notebooks/                 Exploratory and deep-dive analysis
+src/ingestion/             API ingestion scripts
+src/processing/            Flattening and merge logic
+src/analysis/              Preliminary analysis scripts
+src/enrichment/            Salary prediction and enrichment experiments
+```
 
-This is not a finished script—it's a foundation for a production data warehouse.
+## Key outputs
 
-- [x] **Phase 1: Ingestion & Taming.** Reliable pagination, rate-limiting, and immutable storage.
-- [x] **Phase 2: Semantic Deduplication.** Moving from "ID unique" to "Contextual Multi-Role" analysis.
-- [ ] **Phase 3: Automated Observability.** (Next Step) Implementing automated checks for schema drift and data volume anomalies.
-- [ ] **Phase 4: Feature Warehouse.** Transitioning from CSVs to an optimized SQL/Parquet layer for BI tools.
+### Market visuals
+| Role distribution | Market pulse |
+| --- | --- |
+| ![Role distribution](assets/role_distribution.png) | ![Market pulse](assets/market_pulse.png) |
 
----
+### What this repo demonstrates
 
-## 🧪 **Real-World "Pains" Addressed**
+- Building a multi-step ingestion and processing flow instead of a one-notebook analysis
+- Working with imperfect real-world data rather than curated toy datasets
+- Preserving business meaning while handling duplicates and overlap
+- Producing an analysis-ready benchmark dataset for downstream work
 
-This project is built based on honest technical pains encountered in production:
-1. **Definition Ambiguity:** Data Analysts vs. BI Engineers—mapping the gray areas.
-2. **Defensive Programming:** Handling malformed dates and missing company display names gracefully.
-3. **Reproducibility:** Ensuring that the "Model Case" snapshot can be re-run and verified by any stakeholder.
+## How to run it
 
----
+Install dependencies:
 
-## 🤝 **Let's Connect**
+```bash
+pip install -r requirements.txt
+```
 
-I don't just "clean" data. I build the systems that make data **trustworthy**. If you are looking for a Data professional who prioritizes structural integrity over vanity metrics, let's talk.
+Set Adzuna credentials in a `.env` file:
 
----
-*Created by [BNovelo](https://github.com/bnovelorotger)*
+```env
+ADZUNA_APP_ID=your_id_here
+ADZUNA_APP_KEY=your_key_here
+```
+
+Run the main flow:
+
+```bash
+python src/ingestion/run_tech_ingestion.py
+python src/processing/flatten_raw.py --start-date 2026-01-01 --end-date 2026-01-15
+python src/processing/merge_data.py
+```
+
+Detailed replication steps are documented in [docs/DATA_EXTRACTION.md](docs/DATA_EXTRACTION.md).
+
+## Recommended entry points
+
+- `notebooks/eda_preliminary.ipynb`
+- `notebooks/eda_spain_deep_dive.ipynb`
+- `src/processing/flatten_raw.py`
+- `src/processing/merge_data.py`
+
+## Recruiter summary
+
+If you want the short version: this is a portfolio project about data trust.
+
+It combines ingestion, normalization, reproducibility, and analysis on a dataset that is large enough and messy enough to show practical judgment, not just notebook fluency.
